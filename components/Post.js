@@ -63,9 +63,9 @@ const CommentCount = styled.Text`
 `;
 
 const Tagview = styled.View`
-    flex:1;
+  flex:1;
     flex-direction: row;
-    align-items:center;
+    align-items:flex-end;
     justifyContent: flex-end;
 `
 
@@ -86,7 +86,7 @@ const Post = ({
   const [isLiked, setIsLiked] = useState(isLikedProp);
   const [likeCount, setLikeCount] = useState(likeCountProp);
   const [copyCaption, setCopyCaption] = useState(caption)
-
+ 
   const [toggleLikeMutaton] = useMutation(TOGGLE_LIKE, {
     variables: {
       postId: id
@@ -95,11 +95,11 @@ const Post = ({
 
   const [sendNotificateMutation] = useMutation(SEND_NOTIFICATION, ({
     variables: {
-      username: me.username,
-      to: user.id,
-      from: me.id,
-      post: `${id},${isLiked}`,
-      state: "3"
+    username: me.username,
+    to: user.id,
+    from: me.id,
+    post: `${id},${isLiked}`,
+    state: "3"
     }
   }));
 
@@ -114,24 +114,24 @@ const Post = ({
       await sendNotificateMutation();
       await toggleLikeMutaton();
 
-    } catch (e) {
+    } catch (e) { 
       console.log(e)
     }
   };
 
   return (<Container>
-    <Header>
-      <Touchable
-        onPress={() => navigation.navigate("UserDetail", { username: user.username })}>
-        <Image
-          style={{ height: 40, width: 40, borderRadius: 20 }}
-          source={{ uri: user.avatar }}
-        />
-      </Touchable>
-      <Touchable onPress={() => navigation.navigate("UserDetail", { username: user.username })}>
-        <HeaderUserContainer>
-          <Bold>{user.username}</Bold>
-          <Location>{location}</Location>
+      <Header>
+        <Touchable
+          onPress={() => navigation.navigate("UserDetail", { username: user.username })}>
+          <Image
+            style={{ height: 40, width: 40, borderRadius: 20 }}
+            source={{ uri: user.avatar }}
+          />
+        </Touchable>
+        <Touchable onPress={() => navigation.navigate("UserDetail", { username: user.username })}>
+          <HeaderUserContainer>
+            <Bold>{user.username}</Bold>
+            <Location>{location}</Location>
         </HeaderUserContainer>
       </Touchable>
       <Tagview>
@@ -139,64 +139,63 @@ const Post = ({
           initialTags={[hash.tag]}
           readonly
           onTagPress={(index, tagLabel) => {
-            return navigation.navigate("Search", { tagLabel })
+            return navigation.navigate("Tag", { term: tagLabel })
           }}
         />))}
       </Tagview>
-
-    </Header>
-    <Swiper style={{ height: constants.width / 0.88 }}>
-      {files.map(file => (
-        <Image
-          style={{ width: constants.width, height: constants.width }}
-          key={file.id}
-          source={{ uri: file.url }}
-        />
-      ))}
-    </Swiper>
-    <InfoContainer>
-      <IconsContainer>
-        <Touchable onPress={handleLike}>
-          <IconContainer>
-            <AntDesign
-              size={24}
-              color={isLiked ? styles.starColor : styles.blackColor}
-              name={
-                Platform.OS === "ios"
-                  ? isLiked
+      </Header>
+      <Swiper style={{ height: constants.width/0.88 }}>
+        {files.map(file => (
+          <Image
+            style={{ width: constants.width, height: constants.width}}
+            key={file.id}
+            source={{ uri: file.url }}
+          />
+        ))}
+      </Swiper>
+      <InfoContainer>
+        <IconsContainer>
+          <Touchable onPress={handleLike}>
+            <IconContainer>
+              <AntDesign
+                size={24}
+                color={isLiked ? styles.starColor : styles.blackColor}
+                name={
+                  Platform.OS === "ios"
+                    ? isLiked
+                      ? "star"
+                      : "staro"
+                    : isLiked
                     ? "star"
                     : "staro"
-                  : isLiked
-                    ? "star"
-                    : "staro"
-              }
-            />
-          </IconContainer>
+                }
+              />
+            </IconContainer>
+          </Touchable>
+          <Touchable onPress={() => navigation.navigate("CommentDetail", { id })}>
+            <IconContainer >
+              <FontAwesome
+                color={styles.blackColor}
+                size={24}
+                name={Platform.OS === "ios" ? "comment-o" : "comment-o"}
+              />
+            </IconContainer>
         </Touchable>
-        <Touchable onPress={() => navigation.navigate("CommentDetail", { id })}>
-          <IconContainer >
-            <FontAwesome
-              color={styles.blackColor}
-              size={24}
-              name={Platform.OS === "ios" ? "comment-o" : "comment-o"}
-            />
-          </IconContainer>
-          {user.isSelf ? <Popup id={id} copyCaption={copyCaption} setCopyCaption={setCopyCaption} /> : null}
+      {user.isSelf ? <Popup id={id} copyCaption={copyCaption} setCopyCaption={setCopyCaption} /> : null}
+        </IconsContainer>
+        <Touchable>
+          <Bold>{likeCount === 1 ? "1 like" : `${likeCount} likes`}</Bold>
         </Touchable>
-      </IconsContainer>
-      <Touchable>
-        <Bold>{likeCount === 1 ? "1 like" : `${likeCount} likes`}</Bold>
-      </Touchable>
-      <Caption>
-        <Bold>{user.username}</Bold> {caption}
-      </Caption>
+        <Caption>
+          <Bold>{user.username}</Bold> {caption}
+        </Caption>
       <Touchable onPress={() => navigation.navigate("CommentDetail", { id })}>
 
-        {comments.length > 0 ? <CommentCount>댓글 {comments.length}개 더보기</CommentCount> : <CommentCount>첫번째 댓글의 주인공이 되어주세요!</CommentCount>}
+         {comments.length> 0?<CommentCount>댓글 {comments.length}개 더보기</CommentCount>:<CommentCount>첫번째 댓글의 주인공이 되어주세요!</CommentCount>}
 
-      </Touchable>
-    </InfoContainer>
-  </Container>
+        </Touchable>
+      </InfoContainer>
+      </Container>
   )
 };
 

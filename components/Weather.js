@@ -42,19 +42,19 @@ const weatherOptions = {
     icon: <MaterialCommunityIcons name="drama-masks" size={24} color="black" />
   },
   Haze: {
-    event: "  우울하니 카페서 라때 한잔?",
+    event: "  우울하니 카페서 라떼 한잔?",
     icon: <Feather name="coffee" size={24} color="black" />
   }
 };
 
-const Weather = ({ weather, temp }) => {
+const Weather = ({ weather, temp }) => { 
 
-  return (
-    <View style={styles.container}>
-      {weatherOptions[weather].icon}
-      <Text style={styles.temp}>{weatherOptions[weather].event}</Text>
-    </View>
-  )
+    return (
+      <View style={styles.container}>
+       {weatherOptions[weather].icon}
+        <Text style={styles.temp}>{weatherOptions[weather].event}</Text>
+      </View>
+    )
 }
 
 export default Weather;
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   },
   temp: {
     fontSize: 17,
-    fontWeight: 'bold',
+    fontWeight:'bold',
     color: "black"
   }
 });
